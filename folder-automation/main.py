@@ -1,69 +1,49 @@
 from pathlib import Path
 import shutil
 
-# Get current working directory
-basepath = Path(__file__).resolve()
-
 # Define the target path
 target_path = Path(r'TARGET_PATH')
 
-# iterdir() scans the folder
+# Handle scanned files
+def move_scanned_files(file, folder):
+  destination = target_path / folder
+  destination.mkdir(exist_ok=True)
+  filename = destination / file.name
+  try:
+    # Moves the file into the destination folder
+    shutil.move(file, filename)
+    print(f"Moved: {file.name} --> {folder}/")
+  except PermissionError:
+    print(f"Permission denied, skipping: {file.name}")
+
+# Scan the target path
 for file in target_path.iterdir():
   if file.is_file():
+
     # Images
     if file.suffix in (".png", ".jpg", ".jpeg", ".gif", ".bmp", ".svg", ".webp"):
-      folder = "images"
-      destination = target_path / folder
-      filename = destination / file.name
-      move_scanned_files(destination, file, filename)
+      move_scanned_files(file, "images")
 
     # Videos
     elif file.suffix in (".mp4", ".mov", ".avi", ".mkv", ".wmv", ".flv"):
-      folder = "videos"
-      destination = target_path / folder
-      filename = destination / file.name
-      move_scanned_files(destination, file, filename)
+      move_scanned_files(file, "videos")
 
     # Documents
     elif file.suffix in (".pdf", ".docx", ".doc", ".pptx", ".ppt", ".xlsx", ".xls", ".txt"):
-      folder = "documents"
-      destination = target_path / folder
-      filename = destination / file.name
-      move_scanned_files(destination, file, filename)
+      move_scanned_files(file, "documents")
 
     # Data Files
     elif file.suffix in (".csv", ".json", ".xml", ".sql"):
-      folder = "data"
-      destination = target_path / folder
-      filename = destination / file.name
-      move_scanned_files(destination, file, filename)
+      move_scanned_files(file, "data")
 
     # Audio
     elif file.suffix in (".mp3", ".wav", ".aac", ".flac", ".ogg"):
-      folder = "audio"
-      destination = target_path / folder
-      filename = destination / file.name
-      move_scanned_files(destination, file, filename)
+      move_scanned_files(file, "audio")
 
-    # Code / Scripts
+    # Code
     elif file.suffix in (".py", ".js", ".html", ".css", ".ts", ".java", ".cpp", ".c"):
-      folder = "code"
-      destination = target_path / folder
-      filename = destination / file.name
-      move_scanned_files(destination, file, filename)
+      move_scanned_files(file, "code")
 
-    # Everything else
+    # Others
     else:
-      folder = "others"
-      destination = target_path / folder
-      filename = destination / file.name
-      move_scanned_files(destination, file, filename)
-
-# Handle scanned files
-def move_scanned_files(destination = None, file = None, filename = None):
-  destination.mkdir(exist_ok=True)
-  try:
-    # moves the file
-    shutil.move(file, filename)
-  except PermissionError:
-    print(f"Permission denied, skipping: {file.name}")
+      move_scanned_files(file, "others")
