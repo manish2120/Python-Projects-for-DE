@@ -5,7 +5,7 @@ import shutil
 basepath = Path(__file__).resolve()
 
 # Define the target path
-target_path = Path(rTARGET_PATH)
+target_path = Path(r'TARGET_PATH')
 
 # iterdir() scans the folder
 for file in target_path.iterdir():
